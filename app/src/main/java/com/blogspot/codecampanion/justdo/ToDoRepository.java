@@ -19,7 +19,6 @@ public class ToDoRepository {
 
     }
 
-
     public void insert(ToDo toDo){
         new InsertAsynctask(toDoDao).execute(toDo);
 
@@ -34,7 +33,7 @@ public class ToDoRepository {
         new DeleteAsynctask(toDoDao).execute(toDo);
     }
 
-    public void deleteAll(ToDo toDo){
+    public void deleteAll(){
         new DeleteAllAsynctask(toDoDao).execute();
     }
 
