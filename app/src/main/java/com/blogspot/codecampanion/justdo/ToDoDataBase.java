@@ -13,7 +13,7 @@ public abstract class ToDoDataBase extends RoomDatabase {
 
     public abstract ToDoDao toDoDao();
 
-    private static synchronized ToDoDataBase getInstance(Context context){
+    public static synchronized ToDoDataBase getInstance(Context context){
         if(instance == null){
             instance = Room.databaseBuilder(context.getApplicationContext(),
                     ToDoDataBase.class, "todo_database")
