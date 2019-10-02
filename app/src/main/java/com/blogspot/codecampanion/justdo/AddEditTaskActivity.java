@@ -11,8 +11,9 @@ import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.Toast;
 
-public class AddTaskActivity extends AppCompatActivity {
+public class AddEditTaskActivity extends AppCompatActivity {
 
+    public static final String EXTRA_ID = "EXTRA_ID";
     public static final String EXTRA_TASK = "EXTRA_TASK";
     public static final String EXTRA_SUBTASK = "EXTRA_SUBTASK";
 
@@ -30,7 +31,15 @@ public class AddTaskActivity extends AppCompatActivity {
 
 
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_close);
-        setTitle("Add Task");
+
+        Intent intent = getIntent();
+        if (intent.hasExtra(EXTRA_ID)) {
+            setTitle("Edit Task");
+            taskText.setText(intent.getStringExtra(EXTRA_TASK));
+            subTaskText.setText(intent.getStringExtra(EXTRA_SUBTASK));
+        } else {
+            setTitle("Add Task");
+        }
 
     }
 
@@ -46,6 +55,11 @@ public class AddTaskActivity extends AppCompatActivity {
         Intent data = new Intent();
         data.putExtra(EXTRA_TASK, task);
         data.putExtra(EXTRA_SUBTASK, subTask);
+
+        int id = getIntent().getIntExtra(EXTRA_ID, -1);
+        if(id != -1){
+            data.putExtra(EXTRA_ID, id);
+        }
 
         setResult(RESULT_OK, data);
         finish();

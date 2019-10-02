@@ -23,7 +23,9 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final int REQUEST_CODE = 1;
+    private static final int ADD_REQUEST_CODE = 1;
+    private static final int EDIT_REQUEST_CODE = 2;
+
     private ToDoViewModel viewModel;
 
     @Override
@@ -51,8 +53,8 @@ public class MainActivity extends AppCompatActivity {
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, AddTaskActivity.class);
-                startActivityForResult(intent, REQUEST_CODE);
+                Intent intent = new Intent(MainActivity.this, AddEditTaskActivity.class);
+                startActivityForResult(intent, ADD_REQUEST_CODE);
             }
         });
 
@@ -71,20 +73,46 @@ public class MainActivity extends AppCompatActivity {
             }
         }).attachToRecyclerView(recyclerView);
 
+        adapter.setListener(new ToDoAdapter.SetOnItemClickListener() {
+            @Override
+            public void OnItemClick(ToDo toDo) {
+                Intent intent = new Intent(MainActivity.this, AddEditTaskActivity.class);
+                intent.putExtra(AddEditTaskActivity.EXTRA_ID, toDo.getId());
+                intent.putExtra(AddEditTaskActivity.EXTRA_TASK, toDo.getTask());
+                intent.putExtra(AddEditTaskActivity.EXTRA_SUBTASK, toDo.getSubtask());
+
+                startActivityForResult(intent, EDIT_REQUEST_CODE);
+            }
+        });
+
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
 
-        if (requestCode == REQUEST_CODE && resultCode == AddTaskActivity.RESULT_OK) {
-            String task = data.getStringExtra(AddTaskActivity.EXTRA_TASK);
-            String subTask = data.getStringExtra(AddTaskActivity.EXTRA_SUBTASK);
+        if (requestCode == ADD_REQUEST_CODE && resultCode == AddEditTaskActivity.RESULT_OK) {
+            String task = data.getStringExtra(AddEditTaskActivity.EXTRA_TASK);
+            String subTask = data.getStringExtra(AddEditTaskActivity.EXTRA_SUBTASK);
 
             ToDo toDo = new ToDo(task, subTask);
             viewModel.insert(toDo);
-        }
+        } else if (requestCode == EDIT_REQUEST_CODE && resultCode == RESULT_OK) {
+            String task = data.getStringExtra(AddEditTaskActivity.EXTRA_TASK);
+            String subTask = data.getStringExtra(AddEditTaskActivity.EXTRA_SUBTASK);
 
-        super.onActivityResult(requestCode, resultCode, data);
+            ToDo toDo = new ToDo(task, subTask);
+            int id = data.getIntExtra(AddEditTaskActivity.EXTRA_ID, -1);
+            if (id != -1) {
+                toDo.setId(id);
+                viewModel.update(toDo);
+                Toast.makeText(this, "Update Sucess", Toast.LENGTH_SHORT).show();
+            }else {
+                Toast.makeText(this, "Oops something went wrong!!", Toast.LENGTH_SHORT).show();
+            }
+        } else {
+            Toast.makeText(this, "Oops something went wrong!!", Toast.LENGTH_SHORT).show();
+            super.onActivityResult(requestCode, resultCode, data);
+        }
     }
 
     @Override

@@ -14,13 +14,14 @@ import java.util.List;
 public class ToDoAdapter extends RecyclerView.Adapter<ToDoAdapter.ToDoViewHolder> {
 
     private List<ToDo> tasks = new ArrayList<>();
+    private SetOnItemClickListener listener;
 
     public void setTasks(List<ToDo> tasks) {
         this.tasks = tasks;
         notifyDataSetChanged();
     }
 
-    public ToDo getToDoAt(int position){
+    public ToDo getToDoAt(int position) {
         return tasks.get(position);
     }
 
@@ -33,6 +34,17 @@ public class ToDoAdapter extends RecyclerView.Adapter<ToDoAdapter.ToDoViewHolder
             super(itemView);
             taskText = itemView.findViewById(R.id.taskText);
             subTaskText = itemView.findViewById(R.id.textView2);
+
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    int position = getAdapterPosition();
+                    if (listener != null && position != RecyclerView.NO_POSITION) {
+                        listener.OnItemClick(tasks.get(position));
+                    }
+                }
+            });
         }
     }
 
@@ -58,6 +70,14 @@ public class ToDoAdapter extends RecyclerView.Adapter<ToDoAdapter.ToDoViewHolder
     @Override
     public int getItemCount() {
         return tasks.size();
+    }
+
+    public void setListener(SetOnItemClickListener listener) {
+        this.listener = listener;
+    }
+
+    public interface SetOnItemClickListener {
+        void OnItemClick(ToDo toDo);
     }
 
 }
