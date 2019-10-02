@@ -8,11 +8,12 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ToDoAdapter extends RecyclerView.Adapter<ToDoAdapter.ToDoViewHolder> {
 
-    private List<ToDo> tasks;
+    private List<ToDo> tasks = new ArrayList<>();
 
     public void setTasks(List<ToDo> tasks) {
         this.tasks = tasks;

@@ -27,5 +27,4 @@ public interface ToDoDao {
     @Query("SELECT * FROM todo_table")
     LiveData<List<ToDo>> getAllTasks();
 
-
 }
