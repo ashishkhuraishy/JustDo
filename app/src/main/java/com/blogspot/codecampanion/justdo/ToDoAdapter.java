@@ -20,6 +20,10 @@ public class ToDoAdapter extends RecyclerView.Adapter<ToDoAdapter.ToDoViewHolder
         notifyDataSetChanged();
     }
 
+    public ToDo getToDoAt(int position){
+        return tasks.get(position);
+    }
+
     class ToDoViewHolder extends RecyclerView.ViewHolder {
 
         private TextView taskText;
